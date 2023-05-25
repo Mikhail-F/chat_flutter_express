@@ -7,6 +7,8 @@ import { createServer } from "http";
 import { profileRoutes } from "./routes/profile.routes";
 import { chatListRoutes } from "./routes/chat_list_routes";
 
+require('dotenv').config()
+
 export const app = express();
 
 // const jsonParser = bodyParser()

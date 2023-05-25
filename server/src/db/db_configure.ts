@@ -8,8 +8,7 @@ export class DBConfigure {
     return this.dbInit;
   }
 
-  private dbUrl: string =
-    "mongodb+srv://messenger:testpassword@cluster0.khudbq2.mongodb.net/?retryWrites=true&w=majority";
+  private dbUrl: string = process.env.DB_URL!;
 
   connect() {
     mongoose
