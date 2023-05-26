@@ -56,7 +56,6 @@ class Api extends ConfigureApi {
     try {
       final response = await dio.get('/profile/allUsers');
       var items = jsonDecode(response.data);
-      // print(items);
       return List.of(items).map((el) => UserProfileModel.fromMap(el)).toList();
     } catch (e) {
       print(e);

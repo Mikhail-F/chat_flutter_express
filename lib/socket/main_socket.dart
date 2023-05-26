@@ -7,6 +7,7 @@ class MainSocket {
   static MainSocket get instance => _instance ??= MainSocket._connect();
 
   MainSocket._connect() {
+    // https://chat-3mhd.onrender.com
     socket = IO.io("https://chat-3mhd.onrender.com", <String, dynamic>{
       "transports": ['websocket'],
       "autoConnect": false,

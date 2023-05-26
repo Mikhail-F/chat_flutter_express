@@ -5,6 +5,7 @@ import 'package:auth_flutter_express/providers/profile_provider.dart';
 import 'package:auth_flutter_express/screens/splash_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/allChatsProvider/all_users_create_chat.dart';
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // const FlutterSecureStorage().deleteAll();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ChatDetailProvider()),

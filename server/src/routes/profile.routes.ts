@@ -30,11 +30,12 @@ profileRoutes.post(
     res: Response
   ) => {
     try {
+      let myId = Number(req.headers["token"]);
       let userData = req.body;
 
       if (userData) {
         let newUser = new profileModel();
-        newUser.id = userData.id;
+        newUser.id = myId;
         newUser.name = userData.name;
         newUser = await newUser.save();
 

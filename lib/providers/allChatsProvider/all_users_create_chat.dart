@@ -17,6 +17,8 @@ class AllUsersCreateChatProvider extends ChangeNotifier {
   List<UserProfileModel> get allUsers => _allUsers;
 
   Future<void> getAllUsers() async {
+    _mainLoading = true;
+    notifyListeners();
     try {
       if (!await checkInternetConnection()) throw AllExceptionsApi.network;
       List<UserProfileModel> response = await Api().getAllUsers();

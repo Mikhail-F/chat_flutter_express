@@ -45,7 +45,6 @@ class AuthPage extends StatelessWidget {
       try {
         await authRead.loginUser(
             login: _loginController.text, password: _passwordController.text);
-        print(2);
         await profileRead.getProfile();
         Navigator.push(context,
             CupertinoPageRoute(builder: (context) => const ChatListPage()));
