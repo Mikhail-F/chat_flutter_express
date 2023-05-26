@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "dev": "tsc -w & nodemon --inspect ./dist/index",
-    "test": "jest"
+    "test": "jest",
+    "build": "yarn; tsc",
+    "start": "node ./dist/index.js"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
