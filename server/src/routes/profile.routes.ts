@@ -4,6 +4,7 @@ import {
   ProfileRequestCreateUserModel,
   profileModel,
 } from "../models/auth/profile_model";
+import { profileRepository } from "../repositories/profile_repository";
 
 export const profileRoutes = Router();
 
@@ -12,9 +13,9 @@ profileRoutes.get("/", async (req: Request, res: Response) => {
     let myId = Number(req.headers["token"]);
 
     if (myId) {
-      var findUser = await profileModel.find({ id: myId });
+      var findUser = await profileRepository.getProfile(myId);
 
-      res.status(200).json(findUser[0]);
+      res.status(200).json(findUser);
     } else {
       throw "";
     }
@@ -34,11 +35,10 @@ profileRoutes.post(
       let userData = req.body;
 
       if (userData) {
-        let newUser = new profileModel();
-        newUser.id = myId;
-        newUser.name = userData.name;
-        newUser = await newUser.save();
-
+        var newUser = await profileRepository.createProfile(
+          myId,
+          userData.name
+        );
         res.status(200).json(newUser);
       } else {
         throw "";
@@ -52,9 +52,8 @@ profileRoutes.post(
 profileRoutes.get("/allUsers", async (req: Request, res: Response) => {
   try {
     let myId = Number(req.headers["token"]);
-    var allUsers = await profileModel.collection.find().toArray();
+    var allUsers = await profileRepository.getAllUsers(myId);
 
-    allUsers = allUsers.filter((el) => el.id !== myId);
     res.status(200).json(allUsers);
   } catch (e) {
     res.status(404).json("Пользователи не найдены");

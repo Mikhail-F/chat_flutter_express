@@ -7,19 +7,18 @@ import {
   ChatRequestMessageModel,
   chatModel,
 } from "../models/auth/chat_list_model";
+import { chatListRepository } from "../repositories/chat_list_repository";
 
 export const chatListRoutes = Router();
 
 chatListRoutes.get("/", async (req: Request, res: Response) => {
-  var myId = req.headers['token'];
+  var myId = req.headers["token"];
   console.log("TUT" + myId);
   try {
     if (myId) {
-      var creatorChats = await chatModel.find({ creatorId: myId });
-      var anyChats = await chatModel.find({ anyId: myId });
-      var myChats = [...creatorChats, ...anyChats]
+      var myChats = await chatListRepository.getAllChats(myId as string);
       console.log(myChats);
-      
+
       res.status(200).json(myChats);
     } else {
       throw "";
@@ -34,17 +33,10 @@ chatListRoutes.post(
   async (req: RequestWithBody<ChatAllRequestCreateModel>, res: Response) => {
     try {
       let chatData = req.body;
-      let myId = Number(req.headers['token']);
+      let myId = Number(req.headers["token"]);
 
       if (chatData) {
-        let newChat = new chatModel();
-
-        newChat.id = Math.floor(Math.random() * 1000000000000);
-        newChat.name = chatData.name;
-        newChat.creatorId = myId;
-        newChat.anyId = chatData.anyId;
-        newChat = await newChat.save();
-
+        var newChat = await chatListRepository.createChat(chatData, myId);
         res.status(200).json(newChat);
       } else {
         throw "";
@@ -62,7 +54,7 @@ chatListRoutes.get(
       let chatData = req.query;
 
       if (chatData) {
-        let findChat = (await chatModel.find({id: chatData.id}))[0];
+        let findChat = (await chatModel.find({ id: chatData.id }))[0];
 
         res.status(200).json(findChat.messages);
       } else {
