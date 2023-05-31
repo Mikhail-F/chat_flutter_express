@@ -1,5 +1,6 @@
 import 'package:auth_flutter_express/models/chat_list_model.dart';
 import 'package:auth_flutter_express/providers/allChatsProvider/all_chats_provider.dart';
+import 'package:auth_flutter_express/providers/main_provider.dart';
 import 'package:auth_flutter_express/screens/auth/auth_page.dart';
 import 'package:auth_flutter_express/screens/chatList/components/chat_item.dart';
 import 'package:auth_flutter_express/screens/createChat/create_chat_page.dart';
@@ -36,6 +37,7 @@ class _ChatListPageState extends State<ChatListPage> {
   Widget build(BuildContext context) {
     AllChatsProvider chatWatch = context.watch<AllChatsProvider>();
     AllChatsProvider chatRead = context.watch<AllChatsProvider>();
+    var mainRead = context.read<MainProvider>();
 
     return Scaffold(
       appBar: AppBar(
@@ -57,7 +59,12 @@ class _ChatListPageState extends State<ChatListPage> {
                     CupertinoPageRoute(
                         builder: (context) => const CreateChatPage()));
               },
-              child: const Text("Создать"))
+              child: const Text("Создать")),
+          ElevatedButton(
+              onPressed: () {
+                mainRead.changeTheme();
+              },
+              child: const Text("СТ"))
         ],
       ),
       body: chatWatch.mainLoading

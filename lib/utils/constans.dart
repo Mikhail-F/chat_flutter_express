@@ -1,3 +1,4 @@
+import 'package:auth_flutter_express/utils/custom_theme.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
@@ -25,4 +26,8 @@ showMessege({required BuildContext context, required Object error}) {
       behavior: SnackBarBehavior.floating,
     ),
   );
+}
+
+CustomThemeColor getThemeData(BuildContext context) {
+  return Theme.of(context).extension<CustomThemeColor>()!;
 }

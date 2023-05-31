@@ -1,8 +1,11 @@
 import 'package:auth_flutter_express/providers/allChatsProvider/all_chats_provider.dart';
 import 'package:auth_flutter_express/providers/auth_provider.dart';
 import 'package:auth_flutter_express/providers/chat_detail_provider.dart';
+import 'package:auth_flutter_express/providers/main_provider.dart';
 import 'package:auth_flutter_express/providers/profile_provider.dart';
 import 'package:auth_flutter_express/screens/splash_page.dart';
+import 'package:auth_flutter_express/utils/custom_colors.dart';
+import 'package:auth_flutter_express/utils/custom_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -27,6 +30,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AllChatsProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => AllUsersCreateChatProvider()),
+        ChangeNotifierProvider(create: (_) => MainProvider()),
       ],
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -38,16 +42,43 @@ class MyApp extends StatelessWidget {
             FocusManager.instance.primaryFocus!.unfocus();
           }
         },
-        child: MaterialApp(
-          scrollBehavior: MyCustomScrollBehavior(),
-          debugShowCheckedModeBanner: false,
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: const SplashPage(),
-        ),
+        child: const MainApp(),
       ),
+    );
+  }
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var mainWatch = context.watch<MainProvider>();
+    
+    return MaterialApp(
+      scrollBehavior: MyCustomScrollBehavior(),
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      themeMode: mainWatch.isDarkTheme ? ThemeMode.dark : ThemeMode.light,
+      theme: ThemeData(
+        scaffoldBackgroundColor: CustomColors.white,
+        extensions: const [
+          CustomThemeColor(
+            button: CustomColors.grey,
+            buttonText: CustomColors.black,
+          ),
+        ],
+      ),
+      darkTheme: ThemeData(
+        scaffoldBackgroundColor: CustomColors.black,
+        extensions: const [
+          CustomThemeColor(
+            button: CustomColors.white,
+            buttonText: CustomColors.grey,
+          ),
+        ],
+      ),
+      home: const SplashPage(),
     );
   }
 }

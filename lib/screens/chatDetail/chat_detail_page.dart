@@ -27,10 +27,13 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   @override
   void initState() {
     super.initState();
-    socketMethods.sendMessageListener(context);
-    ChatDetailProvider chatRead = context.read<ChatDetailProvider>();
-    chatRead.getChatDetail(id: widget.id);
-    socketMethods.chatDetailJoinOrLeave(id: widget.id, isJoin: true);
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      socketMethods.sendMessageListener(context);
+      ChatDetailProvider chatRead = context.read<ChatDetailProvider>();
+      chatRead.getChatDetail(id: widget.id);
+      socketMethods.chatDetailJoinOrLeave(id: widget.id, isJoin: true);
+    });
   }
 
   void sendMessage() {
@@ -54,11 +57,6 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     ChatDetailProvider chatWatch = context.watch<ChatDetailProvider>();
     ChatDetailProvider chatRead = context.read<ChatDetailProvider>();
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      _scrollListController
-          .jumpTo(_scrollListController.position.maxScrollExtent);
-    });
-
     return Scaffold(
       appBar: AppBar(title: Text("Детальный чат")),
       body: chatWatch.mainLoading
@@ -76,6 +74,11 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   Widget _body() {
     ChatDetailProvider chatWatch = context.watch<ChatDetailProvider>();
     ProfileProvider profileRead = context.read<ProfileProvider>();
+
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _scrollListController
+          .jumpTo(_scrollListController.position.maxScrollExtent);
+    });
 
     return SafeArea(
       child: Padding(
