@@ -13,6 +13,7 @@ export type ChatAllResponseModel = {
 export type ChatRequestMessageModel = {
   id: number;
   text: string;
+  time: number;
 };
 
 export type ChatDetailRequestModel = {

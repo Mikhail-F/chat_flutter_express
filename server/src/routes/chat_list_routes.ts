@@ -37,6 +37,9 @@ chatListRoutes.post(
 
       if (chatData) {
         var newChat = await chatListRepository.createChat(chatData, myId);
+        console.log(newChat);
+
+        if (typeof newChat === "string") return res.status(300).json({errorText: newChat});
         res.status(200).json(newChat);
       } else {
         throw "";

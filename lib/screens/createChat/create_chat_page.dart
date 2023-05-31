@@ -6,6 +6,7 @@ import 'package:auth_flutter_express/utils/constans.dart';
 import 'package:auth_flutter_express/widgets/error_loading_page.dart';
 import 'package:auth_flutter_express/widgets/no_internet_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 
 class CreateChatPage extends StatefulWidget {
@@ -21,10 +22,12 @@ class _CreateChatPageState extends State<CreateChatPage> {
 
   @override
   void initState() {
-    AllUsersCreateChatProvider createChatRead =
-        context.read<AllUsersCreateChatProvider>();
-    createChatRead.getAllUsers();
     super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      AllUsersCreateChatProvider createChatRead =
+          context.read<AllUsersCreateChatProvider>();
+      createChatRead.getAllUsers();
+    });
   }
 
   @override
@@ -78,7 +81,10 @@ class _CreateChatPageState extends State<CreateChatPage> {
             ),
           ),
           const SizedBox(height: 20),
-          const Text("Пользователи:", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
+          const Text(
+            "Пользователи:",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
           const SizedBox(height: 10),
           Expanded(
             child: ListView.builder(

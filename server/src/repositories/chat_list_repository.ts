@@ -9,6 +9,10 @@ export const chatListRepository = {
   },
 
   async createChat(chatData: { name: string; anyId: number }, myId: number) {
+
+    var findChat = await chatModel.find({creatorId: myId, anyId: chatData.anyId });
+    if(findChat) return "Чат с данным пользователем уже есть.";
+
     let newChat = new chatModel();
 
     newChat.id = Math.floor(Math.random() * 1000000000000);

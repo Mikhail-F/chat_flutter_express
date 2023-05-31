@@ -5,6 +5,7 @@ import 'package:auth_flutter_express/models/chat_detail_model.dart';
 import 'package:auth_flutter_express/models/chat_list_model.dart';
 import 'package:auth_flutter_express/models/user_profile_model.dart';
 import 'package:auth_flutter_express/utils/constans.dart';
+import 'package:dio/dio.dart';
 
 class Api extends ConfigureApi {
   Future<void> registrationUser(
@@ -85,7 +86,12 @@ class Api extends ConfigureApi {
 
       return;
     } catch (e) {
-      print(e);
+      if (e is DioError) {
+        var resError = e.response!;
+        var errorText = jsonDecode(e.response.toString())['errorText'];
+        if (resError.statusCode == 300) throw errorText;
+      }
+      // print(e);
       throw "Ошибка создания чата";
     }
   }

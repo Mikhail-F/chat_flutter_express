@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class ChatDetailModel {
   final int id;
   final String userName;
@@ -24,11 +26,13 @@ class ChatDetailItemModel {
   final int id;
   final int userId;
   final String message;
+  final String time;
 
   ChatDetailItemModel({
     required this.id,
     required this.userId,
     required this.message,
+    required this.time,
   });
 
   factory ChatDetailItemModel.fromMap(Map<String, dynamic> map) {
@@ -36,6 +40,9 @@ class ChatDetailItemModel {
       id: map['id'] ?? 0,
       userId: map['myId'] ?? 0,
       message: map['text'] ?? "",
+      time: DateFormat('HH:mm, dd/MM/yy')
+          .format(DateTime.fromMillisecondsSinceEpoch(map['time'] ?? 100000))
+          .toString(),
     );
   }
 }

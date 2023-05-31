@@ -25,12 +25,12 @@ class _ChatListPageState extends State<ChatListPage> {
 
   @override
   void initState() {
+    super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
       AllChatsProvider chatRead = context.read<AllChatsProvider>();
       chatRead.getAllChats();
       socketMethods.allChatsListener(context);
     });
-    super.initState();
   }
 
   @override
@@ -42,6 +42,7 @@ class _ChatListPageState extends State<ChatListPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Чаты"),
+        centerTitle: true,
         leading: ElevatedButton(
             onPressed: () {
               SecureStorage.clearAccessToken();

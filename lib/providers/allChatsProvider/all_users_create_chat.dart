@@ -63,7 +63,7 @@ class AllUsersCreateChatProvider extends ChangeNotifier {
       await Api().createChat(anyId: anyId, title: title);
     } catch (e) {
       print(e);
-      throw "Не удалось создать чат";
+      throw e;
     }
     notifyListeners();
   }

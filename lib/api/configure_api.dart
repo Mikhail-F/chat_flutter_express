@@ -10,7 +10,8 @@ class ConfigureApi {
   static const _client_id = 2;
   static const _client_secret = '';
 
-  static final _devUrl = 'https://chat-3mhd.onrender.com';
+  static final _prodUrl = 'https://chat-3mhd.onrender.com';
+  static final _devUrl = 'http://localhost:3000/';
 
   static String getUrl() {
     // return _buildUrl;
