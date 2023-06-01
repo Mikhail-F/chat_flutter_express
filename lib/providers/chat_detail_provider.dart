@@ -14,7 +14,7 @@ class ChatDetailProvider extends ChangeNotifier {
   bool get mainLoading => _mainLoading;
 
   final SocketMethods _socketMethods = SocketMethods();
-  
+
   List<ChatDetailItemModel> _items = [];
 
   List<ChatDetailItemModel> get items => _items;
@@ -58,10 +58,12 @@ class ChatDetailProvider extends ChangeNotifier {
   }
 
   Future<void> sendMessage(
-      {required int id, required String newMsg, required int userId}) async {
+      {required int chatId,
+      required String newMsg,
+      required int userId}) async {
     try {
       if (!await checkInternetConnection()) throw "Нет интернет соединения";
-      _socketMethods.sendMessage(id: id, msg: newMsg, userId: userId);
+      _socketMethods.sendMessage(chatId: chatId, msg: newMsg, userId: userId);
     } catch (e) {
       throw "Не удалось отправить сообщение";
     }
@@ -69,6 +71,11 @@ class ChatDetailProvider extends ChangeNotifier {
 
   void addNewMessage({required ChatDetailItemModel newMsg}) {
     _items.add(newMsg);
+    notifyListeners();
+  }
+
+  void removeMessage(id) {
+    _items = _items.where((el) => el.id != id).toList();
     notifyListeners();
   }
 }

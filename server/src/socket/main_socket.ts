@@ -21,16 +21,36 @@ export class MainSocket {
         else socket.leave(id.toString());
       });
 
-      socket.on("Send message", async ({ id, myId, text }) => {
+      socket.on("Send message", async ({ chatId, myId, text }) => {
         try {
-          let findChat = (await chatModel.find({ id: id }))[0];
+          let findChat = (await chatModel.find({ id: chatId }))[0];
           let nowTime = Date.now();
 
-          findChat.messages.push({ id, myId, text, time: nowTime });
+          findChat.messages.push({ id: nowTime, myId, text, time: nowTime });
           findChat = await findChat.save();
-          io.to(id.toString()).emit("Success send message", { id, myId, text, time: nowTime });
+          io.to(chatId.toString()).emit("Success send message", {
+            id: nowTime,
+            myId,
+            text,
+            time: nowTime,
+          });
         } catch (e) {
-          io.to(id.toString()).emit("Error send message");
+          io.to(chatId.toString()).emit("Error send message");
+        }
+      });
+
+      socket.on("Remove message", async ({ chatId, id }) => {
+        try {
+          let findChat = (await chatModel.find({ id: chatId }))[0];
+
+          findChat.messages = findChat.messages.filter((el) => el.id != id);
+
+          findChat = await findChat.save();
+          io.to(chatId.toString()).emit("Success remove message", {
+            id,
+          });
+        } catch (e) {
+          io.to(chatId.toString()).emit("Error remove message");
         }
       });
     });

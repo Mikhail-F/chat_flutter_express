@@ -2,6 +2,7 @@ import 'package:auth_flutter_express/models/chat_detail_model.dart';
 import 'package:auth_flutter_express/providers/allChatsProvider/all_chats_provider.dart';
 import 'package:auth_flutter_express/providers/chat_detail_provider.dart';
 import 'package:auth_flutter_express/socket/main_socket.dart';
+import 'package:auth_flutter_express/utils/constans.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
@@ -11,10 +12,18 @@ class SocketMethods {
 
 // Отправка на сервер
   void sendMessage(
-      {required int id, required String msg, required int userId}) {
+      {required int chatId, required String msg, required int userId}) {
     if (msg.trim().isEmpty) return;
 
-    _socket.emit("Send message", {"id": id, "myId": userId, "text": msg});
+    _socket
+        .emit("Send message", {"chatId": chatId, "myId": userId, "text": msg});
+  }
+
+  void removeMessage({required int chatId, required int id}) {
+    _socket.emit("Remove message", {
+      "chatId": chatId,
+      "id": id,
+    });
   }
 
   void addNewChat() {
@@ -36,7 +45,17 @@ class SocketMethods {
     });
 
     _socket.on("Error send message", (_) {
-      print("Eror send message");
+      print("Error send message");
+    });
+
+    _socket.on("Success remove message", (data) {
+      print("Сообщение удалено");
+      chatRead.removeMessage(data['id']);
+    });
+
+    _socket.on("Error remove message", (_) {
+      print("Error remove message");
+      showMessege(context: context, error: "Оишбка удаления сообщения");
     });
   }
 

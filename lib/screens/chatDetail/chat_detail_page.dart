@@ -40,7 +40,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
     ChatDetailProvider chatRead = context.read<ChatDetailProvider>();
     ProfileProvider profileRead = context.read<ProfileProvider>();
     chatRead.sendMessage(
-        id: widget.id,
+        chatId: widget.id,
         newMsg: _messageController.text,
         userId: profileRead.user.id);
     _messageController.clear();
@@ -93,7 +93,7 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                 itemBuilder: (context, index) {
                   ChatDetailItemModel item = chatWatch.items[index];
                   bool isMe = profileRead.user.id == item.userId;
-                  return ChatMessage(item: item, isMe: isMe);
+                  return ChatMessage(item: item, chatId: widget.id, isMe: isMe);
                 },
               ),
             ),
@@ -103,7 +103,8 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                 children: [
                   Expanded(
                     child: TextField(
-                      decoration: InputDecoration(hintText: "Сообщение..."),
+                      decoration:
+                          const InputDecoration(hintText: "Сообщение..."),
                       controller: _messageController,
                       minLines: 1,
                       maxLines: 5,
