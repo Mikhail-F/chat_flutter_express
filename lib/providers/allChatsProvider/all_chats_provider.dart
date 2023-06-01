@@ -1,4 +1,5 @@
-import 'package:auth_flutter_express/api/api.dart';
+import 'package:auth_flutter_express/api/api_chat_list.dart';
+import 'package:auth_flutter_express/models/chat_detail_model.dart';
 import 'package:auth_flutter_express/models/chat_list_model.dart';
 import 'package:auth_flutter_express/utils/constans.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class AllChatsProvider extends ChangeNotifier {
     }
     try {
       if (!await checkInternetConnection()) throw AllExceptionsApi.network;
-      List<ChatListItemModel> chats = await Api().getAllChats();
+      List<ChatListItemModel> chats = await ApiChatList().getAllChats();
       _allChats = chats;
       _isConnect = true;
       _isErrorData = false;
@@ -53,6 +54,14 @@ class AllChatsProvider extends ChangeNotifier {
       throw e;
     }
     _mainLoading = false;
+    notifyListeners();
+  }
+
+  void updateCurrentChat({required int id, required ChatDetailItemModel msg}) {
+    _allChats.map((el) {
+      if (el.id == id) el.lastMessage = msg;
+      return el;
+    }).toList();
     notifyListeners();
   }
 }

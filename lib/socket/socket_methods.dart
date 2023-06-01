@@ -38,10 +38,13 @@ class SocketMethods {
   void sendMessageListener(BuildContext context) {
     if (_socket.hasListeners("Success send message")) return;
     ChatDetailProvider chatRead = context.read<ChatDetailProvider>();
+     AllChatsProvider allChatsRead = context.read<AllChatsProvider>();
 
     _socket.on("Success send message", (data) {
       print("Отправка сообщения");
-      chatRead.addNewMessage(newMsg: ChatDetailItemModel.fromMap(data));
+      ChatDetailItemModel msg = ChatDetailItemModel.fromMap(data);
+      chatRead.addNewMessage(newMsg: msg);
+      allChatsRead.updateCurrentChat(id: data['chatId'], msg: msg);
     });
 
     _socket.on("Error send message", (_) {

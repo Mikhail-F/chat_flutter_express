@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { chatModel } from "./chat_list_model";
 
 export type ProfileRequestCreateUserModel = {
   id: string;
@@ -24,10 +23,6 @@ const profileSchema = new mongoose.Schema({
   name: {
     type: String,
     require: true,
-  },
-  chatList: {
-    type: [Number],
-    default: [],
   },
 });
 

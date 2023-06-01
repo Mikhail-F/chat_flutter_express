@@ -1,4 +1,4 @@
-import 'package:auth_flutter_express/api/api.dart';
+import 'package:auth_flutter_express/api/api_chat_detail.dart';
 import 'package:auth_flutter_express/models/chat_detail_model.dart';
 import 'package:auth_flutter_express/socket/socket_methods.dart';
 import 'package:auth_flutter_express/utils/constans.dart';
@@ -8,6 +8,7 @@ class ChatDetailProvider extends ChangeNotifier {
   bool _isConnect = true;
   bool _isErrorData = false;
   bool _mainLoading = true;
+  bool sendMessageLoading = false;
 
   bool get isConnect => _isConnect;
   bool get isErrorData => _isErrorData;
@@ -24,10 +25,11 @@ class ChatDetailProvider extends ChangeNotifier {
     notifyListeners();
     try {
       if (!await checkInternetConnection()) throw AllExceptionsApi.network;
-      List<ChatDetailItemModel> chats = await Api().getChatDetail(id: id);
+      List<ChatDetailItemModel> chats = await ApiChatDetail().getChatDetail(id: id);
       _items = chats;
       _isConnect = true;
       _isErrorData = false;
+      sendMessageLoading = false;
     } on AllExceptionsApi catch (e) {
       switch (e) {
         case AllExceptionsApi.network:
@@ -62,9 +64,17 @@ class ChatDetailProvider extends ChangeNotifier {
       required String newMsg,
       required int userId}) async {
     try {
+      if(sendMessageLoading) return;
+      sendMessageLoading = true;
+      notifyListeners();
       if (!await checkInternetConnection()) throw "Нет интернет соединения";
       _socketMethods.sendMessage(chatId: chatId, msg: newMsg, userId: userId);
+
+      sendMessageLoading = false;
+      notifyListeners();
     } catch (e) {
+      sendMessageLoading = false;
+      notifyListeners();
       throw "Не удалось отправить сообщение";
     }
   }

@@ -9,9 +9,12 @@ export const chatListRepository = {
   },
 
   async createChat(chatData: { name: string; anyId: number }, myId: number) {
+    var findChat = await chatModel.find({
+      creatorId: myId,
+      anyId: chatData.anyId,
+    });
 
-    var findChat = await chatModel.find({creatorId: myId, anyId: chatData.anyId });
-    if(findChat) return "Чат с данным пользователем уже есть.";
+    if (findChat.length > 0) return "Чат с данным пользователем уже есть.";
 
     let newChat = new chatModel();
 
@@ -19,6 +22,6 @@ export const chatListRepository = {
     newChat.name = chatData.name;
     newChat.creatorId = myId;
     newChat.anyId = chatData.anyId;
-    newChat = await newChat.save();
+    await newChat.save();
   },
 };

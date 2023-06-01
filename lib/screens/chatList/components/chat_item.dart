@@ -22,12 +22,34 @@ class ChatItem extends StatelessWidget {
           ),
         );
       },
-      child: Ink(
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
         color: getThemeData(context).button,
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Text(
-          item.title,
-          style: TextStyle(color: getThemeData(context).buttonText),
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              item.title,
+              style: TextStyle(
+                  color: getThemeData(context).buttonText, fontSize: 16),
+            ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  item.lastMessage.message,
+                  style: TextStyle(color: getThemeData(context).buttonText),
+                ),
+                Text(
+                  item.lastMessage.time,
+                  style: TextStyle(
+                      color: getThemeData(context).buttonText, fontSize: 11),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );

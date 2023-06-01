@@ -25,14 +25,15 @@ export class MainSocket {
         try {
           let findChat = (await chatModel.find({ id: chatId }))[0];
           let nowTime = Date.now();
+          let msg = { id: nowTime, myId, text, time: nowTime };
 
-          findChat.messages.push({ id: nowTime, myId, text, time: nowTime });
-          findChat = await findChat.save();
+          findChat.messages.push(msg);
+          findChat.lastMessage = msg;
+
+          await findChat.save();
           io.to(chatId.toString()).emit("Success send message", {
-            id: nowTime,
-            myId,
-            text,
-            time: nowTime,
+            ...msg,
+            chatId: chatId,
           });
         } catch (e) {
           io.to(chatId.toString()).emit("Error send message");

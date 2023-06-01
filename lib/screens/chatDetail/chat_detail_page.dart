@@ -119,6 +119,9 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                         color: Colors.lightGreen,
                         borderRadius: BorderRadius.circular(20),
                       ),
+                      child: chatWatch.sendMessageLoading
+                          ? const CircularProgressIndicator()
+                          : null,
                     ),
                   )
                 ],

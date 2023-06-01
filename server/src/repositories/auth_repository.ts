@@ -10,7 +10,8 @@ export const authRepository = {
     if (password) {
       data["password"] = password;
     }
-    return await registerModel.find();
+
+    return await registerModel.find(data);
   },
 
   async createUser(login: string, password: string) {
@@ -18,6 +19,6 @@ export const authRepository = {
     newUser.login = login;
     newUser.password = password;
     newUser.accessToken = Math.floor(Math.random() * 1000000000000);
-    newUser = await newUser.save();
+    await newUser.save();
   },
 };

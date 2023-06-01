@@ -1,4 +1,5 @@
-import 'package:auth_flutter_express/api/api.dart';
+import 'package:auth_flutter_express/api/api_profile.dart';
+import 'package:auth_flutter_express/api/api_chat_list.dart';
 import 'package:auth_flutter_express/models/user_profile_model.dart';
 import 'package:auth_flutter_express/utils/constans.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class AllUsersCreateChatProvider extends ChangeNotifier {
     notifyListeners();
     try {
       if (!await checkInternetConnection()) throw AllExceptionsApi.network;
-      List<UserProfileModel> response = await Api().getAllUsers();
+      List<UserProfileModel> response = await ApiProfile().getAllUsers();
       _allUsers = response;
       _isConnect = true;
       _isErrorData = false;
@@ -60,7 +61,7 @@ class AllUsersCreateChatProvider extends ChangeNotifier {
   }) async {
     try {
       if (!await checkInternetConnection()) throw AllExceptionsApi.network;
-      await Api().createChat(anyId: anyId, title: title);
+      await ApiChatList().createChat(anyId: anyId, title: title);
     } catch (e) {
       print(e);
       throw e;
