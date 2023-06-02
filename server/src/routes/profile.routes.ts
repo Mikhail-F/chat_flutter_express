@@ -1,4 +1,4 @@
-import { Router, Response, Request } from "express";
+import { Router, Response, Request, NextFunction } from "express";
 import { RequestWithBody } from "../models/types";
 import {
   ProfileRequestCreateUserModel,
@@ -8,17 +8,25 @@ import { profileRepository } from "../repositories/profile_repository";
 
 export const profileRoutes = Router();
 
+const checkAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  let myId = Number(req.headers["token"]);
+
+  if (myId) {
+    next();
+  } else {
+    res.status(401).json("Вы не авторизованы");
+  }
+};
+
+profileRoutes.use(checkAuthMiddleware);
+
 profileRoutes.get("/", async (req: Request, res: Response) => {
   try {
     let myId = Number(req.headers["token"]);
 
-    if (myId) {
-      var findUser = await profileRepository.getProfile(myId);
+    var findUser = await profileRepository.getProfile(myId);
 
-      res.status(200).json(findUser);
-    } else {
-      throw "";
-    }
+    res.status(200).json(findUser);
   } catch (e) {
     res.status(404).json("Не найден пользователь");
   }

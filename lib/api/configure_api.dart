@@ -35,14 +35,25 @@ class ConfigureApi {
     return;
   }
 
-  var dio = Dio(BaseOptions(
-    baseUrl: _url,
-    headers: {
-      "token": token
-      // "authorization":
-      //     'Basic ' + base64Encode(utf8.encode('mirhvost:mirhvost')),
-    },
-    contentType: Headers.jsonContentType,
-    responseType: ResponseType.plain,
-  ));
+  Dio dio() {
+    var dio = Dio(BaseOptions(
+      baseUrl: _url,
+      headers: {
+        "token": token
+        // "authorization":
+        //     'Basic ' + base64Encode(utf8.encode('mirhvost:mirhvost')),
+      },
+      contentType: Headers.jsonContentType,
+      responseType: ResponseType.plain,
+    ));
+
+    dio.interceptors.add(InterceptorsWrapper(onError: (error, handler) {
+      if (error.response?.statusCode == 403 ||
+          error.response?.statusCode == 401) {
+            print("EEEEEEEE");
+          }
+      return handler.next(error);
+    }));
+    return dio;
+  }
 }

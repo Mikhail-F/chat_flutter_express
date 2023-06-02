@@ -7,7 +7,7 @@ class ApiAuth extends ConfigureApi {
       {required String login, required String password}) async {
     try {
       final data = {"login": login, "password": password};
-      await dio.post('/auth', data: data);
+      await dio().post('/auth', data: data);
     } catch (e) {
       print(e);
     }
@@ -17,7 +17,7 @@ class ApiAuth extends ConfigureApi {
       {required String login, required String password}) async {
     final data = {"login": login, "password": password};
     try {
-      final response = await dio.get('/auth', queryParameters: data);
+      final response = await dio().get('/auth', queryParameters: data);
       var items = jsonDecode(response.data);
 
       return items["accessToken"].toString();

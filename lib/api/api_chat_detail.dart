@@ -9,7 +9,7 @@ class ApiChatDetail extends ConfigureApi {
     try {
       final data = {"id": id};
       final response =
-          await dio.get('/allChats/chatDetail', queryParameters: data);
+          await dio().get('/allChats/chatDetail', queryParameters: data);
       var items = jsonDecode(response.data);
       // print(items);
       return List.of(items)

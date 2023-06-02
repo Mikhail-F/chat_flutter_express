@@ -8,7 +8,7 @@ class ApiProfile extends ConfigureApi {
   Future<void> createProfile({required String name}) async {
     try {
       final data = {"name": name};
-      await dio.post('/profile', data: data);
+      await dio().post('/profile', data: data);
     } catch (e) {
       print(e);
     }
@@ -16,7 +16,7 @@ class ApiProfile extends ConfigureApi {
 
   Future<UserProfileModel> getProfile() async {
     try {
-      final response = await dio.get('/profile');
+      final response = await dio().get('/profile');
       var items = jsonDecode(response.data);
       // print(items);
       return UserProfileModel.fromMap(items);
@@ -28,7 +28,7 @@ class ApiProfile extends ConfigureApi {
 
   Future<List<UserProfileModel>> getAllUsers() async {
     try {
-      final response = await dio.get('/profile/allUsers');
+      final response = await dio().get('/profile/allUsers');
       var items = jsonDecode(response.data);
       return List.of(items).map((el) => UserProfileModel.fromMap(el)).toList();
     } catch (e) {

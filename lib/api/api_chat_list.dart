@@ -9,7 +9,7 @@ class ApiChatList extends ConfigureApi {
 
   Future<List<ChatListItemModel>> getAllChats() async {
     try {
-      final response = await dio.get('/allChats');
+      final response = await dio().get('/allChats');
       var items = jsonDecode(response.data);
       print(items);
       return List.of(items).map((el) => ChatListItemModel.fromMap(el)).toList();
@@ -25,7 +25,7 @@ class ApiChatList extends ConfigureApi {
   }) async {
     try {
       final data = {"anyId": anyId, "name": title};
-      await dio.post('/allChats', data: data);
+      await dio().post('/allChats', data: data);
 
       return;
     } catch (e) {
