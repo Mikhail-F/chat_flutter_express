@@ -14,21 +14,24 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  
   void loadData() async {
-    await ConfigureApi.setDeviceId();
-    if (ConfigureApi.token == 0) {
-      Navigator.pushAndRemoveUntil(context,
-          CupertinoPageRoute(builder: (_) => AuthPage()), (route) => false);
-      return;
-    }
-    ProfileProvider profileRead = context.read<ProfileProvider>();
-    await profileRead.getProfile();
+    try {
+      await ConfigureApi.setDeviceId();
+      if (ConfigureApi.token == 0) throw "";
 
-    Navigator.pushAndRemoveUntil(
-        context,
-        CupertinoPageRoute(builder: (_) => const ChatListPage()),
-        (route) => false);
+      ProfileProvider profileRead = context.read<ProfileProvider>();
+      await profileRead.getProfile();
+
+      Navigator.pushAndRemoveUntil(
+          context,
+          CupertinoPageRoute(builder: (_) => const ChatListPage()),
+          (route) => false);
+    } catch (e) {
+      Navigator.pushAndRemoveUntil(
+          context,
+          CupertinoPageRoute(builder: (_) => const AuthPage()),
+          (route) => false);
+    }
   }
 
   @override

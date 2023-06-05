@@ -15,7 +15,7 @@ class ConfigureApi {
 
   static String getUrl() {
     // return _buildUrl;
-    return _devUrl;
+    return _prodUrl;
   }
 
   static final String _url = getUrl();

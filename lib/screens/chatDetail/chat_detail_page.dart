@@ -2,6 +2,7 @@ import 'package:auth_flutter_express/models/chat_detail_model.dart';
 import 'package:auth_flutter_express/providers/chat_detail_provider.dart';
 import 'package:auth_flutter_express/providers/profile_provider.dart';
 import 'package:auth_flutter_express/screens/chatDetail/components/chat_messsage.dart';
+import 'package:auth_flutter_express/screens/chatDetail/components/record_message.dart';
 import 'package:auth_flutter_express/socket/main_socket.dart';
 import 'package:auth_flutter_express/socket/socket_methods.dart';
 import 'package:auth_flutter_express/widgets/error_loading_page.dart';
@@ -23,11 +24,15 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
   final TextEditingController _messageController = TextEditingController();
   final MainSocket socket = MainSocket.instance;
   final SocketMethods socketMethods = SocketMethods();
+  bool textFieldIsEmpty = true;
 
   @override
   void initState() {
     super.initState();
-
+    _messageController.addListener(() {
+      textFieldIsEmpty = _messageController.text.isEmpty;
+      setState(() {});
+    });
     SchedulerBinding.instance.addPostFrameCallback((_) {
       socketMethods.sendMessageListener(context);
       ChatDetailProvider chatRead = context.read<ChatDetailProvider>();
@@ -110,20 +115,22 @@ class _ChatDetailPageState extends State<ChatDetailPage> {
                       maxLines: 5,
                     ),
                   ),
-                  InkWell(
-                    onTap: sendMessage,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.lightGreen,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: chatWatch.sendMessageLoading
-                          ? const CircularProgressIndicator()
-                          : null,
-                    ),
-                  )
+                  textFieldIsEmpty
+                      ? const RecordMessage()
+                      : InkWell(
+                          onTap: sendMessage,
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.lightGreen,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: chatWatch.sendMessageLoading
+                                ? const CircularProgressIndicator()
+                                : null,
+                          ),
+                        )
                 ],
               ),
             ),
