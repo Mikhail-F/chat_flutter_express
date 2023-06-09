@@ -25,7 +25,7 @@ class ChatDetailModel {
 class ChatDetailItemModel {
   final int id;
   final int userId;
-  final String message;
+  String message;
   final String time;
 
   ChatDetailItemModel({

@@ -43,7 +43,8 @@ dependencies:
   intl: ^0.18.1
   flutter_slidable: ^3.0.0
   record: ^4.4.4
-  pick_or_save: ^2.2.4
+  audioplayers: ^4.1.0
+  # pick_or_save: ^2.2.4
 
 dev_dependencies:
   flutter_test:

@@ -26,6 +26,15 @@ class SocketMethods {
     });
   }
 
+  void editMessage(
+      {required int chatId, required int id, required String newText}) {
+    _socket.emit("Edit message", {
+      "chatId": chatId,
+      "id": id,
+      "newText": newText,
+    });
+  }
+
   void addNewChat() {
     _socket.emit("Add new chat");
   }
@@ -36,9 +45,12 @@ class SocketMethods {
 
 // Прием с сервера
   void sendMessageListener(BuildContext context) {
-    if (_socket.hasListeners("Success send message")) return;
+    if (_socket.hasListeners("Success send message") ||
+        _socket.hasListeners("Error send message") ||
+        _socket.hasListeners("Success remove message") ||
+        _socket.hasListeners("Error remove message")) return;
     ChatDetailProvider chatRead = context.read<ChatDetailProvider>();
-     AllChatsProvider allChatsRead = context.read<AllChatsProvider>();
+    AllChatsProvider allChatsRead = context.read<AllChatsProvider>();
 
     _socket.on("Success send message", (data) {
       print("Отправка сообщения");
@@ -54,6 +66,11 @@ class SocketMethods {
     _socket.on("Success remove message", (data) {
       print("Сообщение удалено");
       chatRead.removeMessage(data['id']);
+    });
+
+    _socket.on("Success edit message", (data) {
+      print("Сообщение изменено ${data['newText']}");
+      chatRead.editMessage(data['id'], data['newText']);
     });
 
     _socket.on("Error remove message", (_) {

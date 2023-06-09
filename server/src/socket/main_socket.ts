@@ -54,6 +54,24 @@ export class MainSocket {
           io.to(chatId.toString()).emit("Error remove message");
         }
       });
+
+      socket.on("Edit message", async ({ chatId, id, newText }) => {
+        try {
+          let findChat = (await chatModel.find({ id: chatId }))[0];
+
+          chatModel.collection.updateOne(
+            { _id: findChat._id, "messages.id": id },
+            { $set: { "messages.$.text": newText } }
+          );
+
+          io.to(chatId.toString()).emit("Success edit message", {
+            id,
+            newText,
+          });
+        } catch (e) {
+          io.to(chatId.toString()).emit("Error edit message");
+        }
+      });
     });
   }
 }

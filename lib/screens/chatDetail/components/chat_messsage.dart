@@ -1,9 +1,11 @@
 import 'dart:math';
 
 import 'package:auth_flutter_express/models/chat_detail_model.dart';
+import 'package:auth_flutter_express/providers/chat_detail_provider.dart';
 import 'package:auth_flutter_express/socket/socket_methods.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:provider/provider.dart';
 
 class ChatMessage extends StatelessWidget {
   final ChatDetailItemModel item;
@@ -20,24 +22,29 @@ class ChatMessage extends StatelessWidget {
     socketMethods.removeMessage(chatId: chatId, id: item.id);
   }
 
+  void editMsg(BuildContext context) {
+    ChatDetailProvider chatRead = context.read<ChatDetailProvider>();
+    chatRead.selectEditedMsg(item);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Slidable(
       key: ValueKey(Random().nextInt(1000000)),
-      startActionPane: !isMe
-          ? ActionPane(
-              motion: const ScrollMotion(),
-              children: [
-                SlidableAction(
-                  onPressed: (_) {},
-                  backgroundColor: Color.fromARGB(255, 127, 127, 127),
-                  foregroundColor: Colors.white,
-                  icon: Icons.share,
-                  label: 'Ответить',
-                ),
-              ],
-            )
-          : null,
+      // startActionPane: !isMe
+      //     ? ActionPane(
+      //         motion: const ScrollMotion(),
+      //         children: [
+      //           SlidableAction(
+      //             onPressed: (_) {},
+      //             backgroundColor: const Color.fromARGB(255, 127, 127, 127),
+      //             foregroundColor: Colors.white,
+      //             icon: Icons.share,
+      //             label: 'Ответить',
+      //           ),
+      //         ],
+      //       )
+      //     : null,
       endActionPane: isMe
           ? ActionPane(
               key: ValueKey(Random().nextInt(1000000)),
@@ -49,6 +56,13 @@ class ChatMessage extends StatelessWidget {
                   foregroundColor: Colors.white,
                   icon: Icons.delete,
                   label: 'Delete',
+                ),
+                SlidableAction(
+                  onPressed: editMsg,
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  icon: Icons.edit,
+                  label: 'Edit',
                 ),
               ],
             )
@@ -72,13 +86,16 @@ class ChatMessage extends StatelessWidget {
             padding: const EdgeInsets.all(12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(
-                  item.message,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: isMe ? Colors.white : Colors.black87),
+                Flexible(
+                  child: Text(
+                    item.message,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: isMe ? Colors.white : Colors.black87),
+                  ),
                 ),
                 Transform.translate(
                   offset: const Offset(0, 7),

@@ -15,6 +15,8 @@ class ChatDetailProvider extends ChangeNotifier {
   bool get mainLoading => _mainLoading;
 
   final SocketMethods _socketMethods = SocketMethods();
+  final TextEditingController messageController = TextEditingController();
+  ChatDetailItemModel? editedMsg;
 
   List<ChatDetailItemModel> _items = [];
 
@@ -25,11 +27,14 @@ class ChatDetailProvider extends ChangeNotifier {
     notifyListeners();
     try {
       if (!await checkInternetConnection()) throw AllExceptionsApi.network;
-      List<ChatDetailItemModel> chats = await ApiChatDetail().getChatDetail(id: id);
+      List<ChatDetailItemModel> chats =
+          await ApiChatDetail().getChatDetail(id: id);
       _items = chats;
       _isConnect = true;
       _isErrorData = false;
       sendMessageLoading = false;
+      messageController.clear();
+      editedMsg = null;
     } on AllExceptionsApi catch (e) {
       switch (e) {
         case AllExceptionsApi.network:
@@ -59,23 +64,40 @@ class ChatDetailProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> sendMessage(
-      {required int chatId,
-      required String newMsg,
-      required int userId}) async {
+  Future<void> sendMessage({required int chatId, required int userId}) async {
     try {
-      if(sendMessageLoading) return;
+      if (sendMessageLoading) return;
       sendMessageLoading = true;
       notifyListeners();
       if (!await checkInternetConnection()) throw "Нет интернет соединения";
-      _socketMethods.sendMessage(chatId: chatId, msg: newMsg, userId: userId);
-
+      _socketMethods.sendMessage(
+          chatId: chatId, msg: messageController.text, userId: userId);
+      messageController.clear();
       sendMessageLoading = false;
       notifyListeners();
     } catch (e) {
       sendMessageLoading = false;
       notifyListeners();
       throw "Не удалось отправить сообщение";
+    }
+  }
+
+  Future<void> sendEditedMessage({required int chatId}) async {
+    try {
+      if (sendMessageLoading) return;
+      sendMessageLoading = true;
+      notifyListeners();
+      if (!await checkInternetConnection()) throw "Нет интернет соединения";
+      _socketMethods.editMessage(
+          chatId: chatId, newText: messageController.text, id: editedMsg!.id);
+      editedMsg = null;
+      messageController.clear();
+      sendMessageLoading = false;
+      notifyListeners();
+    } catch (e) {
+      sendMessageLoading = false;
+      notifyListeners();
+      throw "Не удалось изменить сообщение";
     }
   }
 
@@ -86,6 +108,25 @@ class ChatDetailProvider extends ChangeNotifier {
 
   void removeMessage(id) {
     _items = _items.where((el) => el.id != id).toList();
+    notifyListeners();
+  }
+
+  void editMessage(int id, String msg) {
+    _items.map((el) {
+      if (el.id == id) {
+        el.message = msg;
+      }
+      return el;
+    }).toList();
+    notifyListeners();
+  }
+
+  void selectEditedMsg(ChatDetailItemModel? msg) {
+    editedMsg = msg;
+    if (msg != null)
+      messageController.text = editedMsg!.message;
+    else
+      messageController.clear();
     notifyListeners();
   }
 }

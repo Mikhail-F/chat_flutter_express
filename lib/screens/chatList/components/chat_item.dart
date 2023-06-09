@@ -1,7 +1,6 @@
 import 'package:auth_flutter_express/models/chat_list_model.dart';
 import 'package:auth_flutter_express/screens/chatDetail/chat_detail_page.dart';
 import 'package:auth_flutter_express/utils/constans.dart';
-import 'package:auth_flutter_express/utils/custom_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +16,7 @@ class ChatItem extends StatelessWidget {
           context,
           CupertinoPageRoute(
             builder: (context) => ChatDetailPage(
-              id: item.id,
+              chatId: item.id,
             ),
           ),
         );
