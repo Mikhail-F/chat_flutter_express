@@ -1,29 +1,18 @@
-import { Router, Response, Request, NextFunction } from "express";
+import { Router, Response, Request } from "express";
 import { RequestWithBody, RequestWithQuery } from "../models/types";
-import { profileModel } from "../models/auth/profile_model";
 import {
   ChatAllRequestCreateModel,
   ChatDetailRequestModel,
-  ChatRequestMessageModel,
   chatModel,
 } from "../models/auth/chat_list_model";
 import { chatListRepository } from "../repositories/chat_list_repository";
+import { checkAuthMiddleware } from "../middlewares/auth/auth-middlewares";
+import {
+  chatDetailValidation,
+  chatDetailValidationMiddleware,
+} from "../middlewares/chat/chat-middleware";
 
 export const chatListRoutes = Router();
-
-const checkAuthMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  let myId = Number(req.headers["token"]);
-
-  if (myId) {
-    next();
-  } else {
-    res.status(401).json("Вы не авторизованы");
-  }
-};
 
 chatListRoutes.use(checkAuthMiddleware);
 
@@ -65,17 +54,15 @@ chatListRoutes.post(
 
 chatListRoutes.get(
   "/chatDetail",
+  chatDetailValidation,
+  chatDetailValidationMiddleware,
   async (req: RequestWithQuery<ChatDetailRequestModel>, res: Response) => {
     try {
       let chatData = req.query;
 
-      if (chatData) {
-        let findChat = (await chatModel.find({ id: chatData.id }))[0];
-
-        res.status(200).json(findChat.messages);
-      } else {
-        throw "";
-      }
+      let findChat = await chatModel.findOne({ id: chatData.id });
+      if (findChat == null) throw "";
+      res.status(200).json(findChat.messages);
     } catch (e) {
       res.status(404).json("Не удалось загрузить сообщения");
     }

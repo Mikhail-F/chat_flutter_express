@@ -1,22 +1,14 @@
-import { Router, Response, Request, NextFunction } from "express";
+import { Router, Response, Request } from "express";
 import { RequestWithBody } from "../models/types";
-import {
-  ProfileRequestCreateUserModel,
-  profileModel,
-} from "../models/auth/profile_model";
+import { ProfileRequestCreateUserModel } from "../models/auth/profile_model";
 import { profileRepository } from "../repositories/profile_repository";
+import { checkAuthMiddleware } from "../middlewares/auth/auth-middlewares";
+import {
+  profileValidation,
+  profileValidationMiddleware,
+} from "../middlewares/profile/profile-middleware";
 
 export const profileRoutes = Router();
-
-const checkAuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  let myId = Number(req.headers["token"]);
-
-  if (myId) {
-    next();
-  } else {
-    res.status(401).json("Вы не авторизованы");
-  }
-};
 
 profileRoutes.use(checkAuthMiddleware);
 
@@ -34,6 +26,8 @@ profileRoutes.get("/", async (req: Request, res: Response) => {
 
 profileRoutes.post(
   "/",
+  profileValidation,
+  profileValidationMiddleware,
   async (
     req: RequestWithBody<ProfileRequestCreateUserModel>,
     res: Response
@@ -42,15 +36,8 @@ profileRoutes.post(
       let myId = Number(req.headers["token"]);
       let userData = req.body;
 
-      if (userData) {
-        var newUser = await profileRepository.createProfile(
-          myId,
-          userData.name
-        );
-        res.status(200).json(newUser);
-      } else {
-        throw "";
-      }
+      var newUser = await profileRepository.createProfile(myId, userData.name);
+      res.status(200).json(newUser);
     } catch (e) {
       res.status(404).json("Не удалось создать аккаунт");
     }

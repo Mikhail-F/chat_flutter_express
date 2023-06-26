@@ -1,15 +1,19 @@
-import { Router, Request, Response } from "express";
+import { Router, Response } from "express";
 import { RequestWithBody, RequestWithQuery } from "../models/types";
-import {
-  AuthRequestCreateUserModel,
-  registerModel,
-} from "../models/auth/auth_model";
+import { AuthRequestCreateUserModel } from "../models/auth/auth_model";
 import { authRepository } from "../repositories/auth_repository";
+import {
+  inputValidationMiddleware,
+  loginValidation,
+  loginCreateAccountValidation,
+} from "../middlewares/auth/auth-middlewares";
 
 export const authRoutes = Router();
 
 authRoutes.get(
   "/",
+  loginValidation,
+  inputValidationMiddleware,
   async (req: RequestWithQuery<AuthRequestCreateUserModel>, res: Response) => {
     // await registerModel.collection.find().toArray() - Получение всех элементов
     try {
@@ -29,6 +33,8 @@ authRoutes.get(
 
 authRoutes.post(
   "/",
+  loginCreateAccountValidation,
+  inputValidationMiddleware,
   async (req: RequestWithBody<AuthRequestCreateUserModel>, res: Response) => {
     try {
       const body: AuthRequestCreateUserModel = req.body;
