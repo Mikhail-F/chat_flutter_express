@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:auth_flutter_express/api/configure_api.dart';
-import 'package:auth_flutter_express/models/user_profile_model.dart';
-import 'package:auth_flutter_express/utils/constans.dart';
+import 'package:auth_flutter_express/domain/models/user_profile_model.dart';
+import 'package:auth_flutter_express/presentation/utils/constans.dart';
 
 class ApiProfile extends ConfigureApi {
   Future<void> createProfile({required String name}) async {

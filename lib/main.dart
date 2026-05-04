@@ -1,17 +1,17 @@
-import 'package:auth_flutter_express/providers/allChatsProvider/all_chats_provider.dart';
-import 'package:auth_flutter_express/providers/auth_provider.dart';
-import 'package:auth_flutter_express/providers/chat_detail_provider.dart';
-import 'package:auth_flutter_express/providers/main_provider.dart';
-import 'package:auth_flutter_express/providers/profile_provider.dart';
-import 'package:auth_flutter_express/screens/splash_page.dart';
-import 'package:auth_flutter_express/utils/custom_colors.dart';
-import 'package:auth_flutter_express/utils/custom_theme.dart';
+import 'package:auth_flutter_express/presentation/providers/allChatsProvider/all_chats_provider.dart';
+import 'package:auth_flutter_express/presentation/providers/auth_provider.dart';
+import 'package:auth_flutter_express/presentation/providers/chat_detail_provider.dart';
+import 'package:auth_flutter_express/presentation/providers/main_provider.dart';
+import 'package:auth_flutter_express/presentation/providers/profile_provider.dart';
+import 'package:auth_flutter_express/presentation/screens/splash_page.dart';
+import 'package:auth_flutter_express/presentation/utils/custom_colors.dart';
+import 'package:auth_flutter_express/presentation/utils/custom_theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 
-import 'providers/allChatsProvider/all_users_create_chat.dart';
+import 'presentation/providers/allChatsProvider/all_users_create_chat.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:auth_flutter_express/api/configure_api.dart';
-import 'package:auth_flutter_express/models/chat_detail_model.dart';
-import 'package:auth_flutter_express/utils/constans.dart';
+import 'package:auth_flutter_express/domain/models/chat_detail_model.dart';
+import 'package:auth_flutter_express/presentation/utils/constans.dart';
 
 class ApiChatDetail extends ConfigureApi {
   Future<List<ChatDetailItemModel>> getChatDetail({required int id}) async {
